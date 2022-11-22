@@ -1,5 +1,4 @@
 ﻿using Common;
-using Google.Protobuf;
 using NetMQ;
 using NetMQ.Sockets;
 using static Common.Configuration;
@@ -23,36 +22,26 @@ for (var i = 0; i < MessagesCount; i++)
         BLUE = GetNumber(rand)
     };
 
-    if (socket.TrySendMultipartMessage(MessageTimeout, ToMessage(color)))
+    if (socket.TrySendMultipartMessage(MessageTimeout, Converter.ToNetMQMessage(color)))
     {
         Console.WriteLine($"Sent topic '{topic}' with message '{color}'");
     }
+#if DEBUG
     else
     {
         Console.WriteLine("Message not sent.");
     }
+#endif
 
     Thread.Sleep(MessageInterval);
 }
+
+Console.WriteLine($"Total {MessagesCount} messages sent.");
 
 Console.WriteLine("Closing publisher socket...");
 socket.Close();
 
 Console.WriteLine("Press any to continue...");
 Console.Read();
-
-static NetMQMessage ToMessage(IMessage data)
-{
-    using var memStream = new MemoryStream();
-    using var outStream = new CodedOutputStream(memStream);
-    data.WriteTo(outStream);
-    outStream.Flush();
-
-    var message = new NetMQMessage();
-    message.Append(data.Descriptor.FullName);
-    message.Append(memStream.ToArray());
-
-    return message;
-}
 
 static int GetNumber(Random r) => r.Next(0, 256);
