@@ -1,0 +1,10 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Common";
+
+message Color 
+{
+	int64 RED = 1;
+	int64 GREEN = 2;
+	int64 BLUE = 3;
+}
