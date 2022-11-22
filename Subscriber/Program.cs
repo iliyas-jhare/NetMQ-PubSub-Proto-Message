@@ -50,13 +50,13 @@ static IMessage ToMessage(NetMQMessage msg)
     var descriptor = MessagesReflection.Descriptor.FindTypeByName<MessageDescriptor>(topic);
     if (descriptor is null)
     {
-        throw new ArgumentNullException(nameof(topic), $"Message topic '{topic}' could not be found.");
+        throw new ArgumentException($"Message topic '{topic}' could not be found.");
     }
 
     var message = descriptor.Parser.ParseFrom(contents);
     if (topic != message.Descriptor.FullName)
     {
-        throw new ArgumentException(nameof(topic), $"There is a mismatch in messsage topic. '{topic}'. '{message.Descriptor.FullName}'");
+        throw new ArgumentException($"There is a mismatch in the messsage topic. '{topic}'. '{message.Descriptor.FullName}'");
     }
 
     Console.WriteLine($"Recieved topic '{message.Descriptor.FullName}' with message '{message}'");

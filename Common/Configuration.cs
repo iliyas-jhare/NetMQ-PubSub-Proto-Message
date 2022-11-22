@@ -6,7 +6,7 @@ public static class Configuration
 
     public const int HighWatermark = 1000;
 
-    public const int MessagesCount = 10;
+    public const int MessagesCount = 20;
 
     public static TimeSpan MessageInterval => TimeSpan.FromMilliseconds(500);
 
